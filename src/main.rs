@@ -8,20 +8,20 @@
 // - chrono::offset::local::Local -> chrono::Local
 // - chrono::datetime::DateTime -> chrono::DateTime
 
-use chrono::naive::date::NaiveDate;
-use chrono::naive::time::NaiveTime;
-use chrono::naive::datetime::NaiveDateTime;
-use chrono::offset::utc::UTC;
-use chrono::offset::local::Local;
+use chrono::NaiveDate;
+use chrono::NaiveTime;
+use chrono::NaiveDateTime;
+use chrono::Utc;
+use chrono::Local;
 use chrono::Datelike;
 
 fn main() {
     // Create a date using the old API
-    let date = NaiveDate::from_ymd(2024, 6, 15);
+    let date = NaiveDate::from_ymd_opt(2024, 6, 15).unwrap();
     println!("Date: {}", date);
 
     // Use isoweekdate() from Datelike trait
-    let (year, week, weekday) = date.isoweekdate();
+    let (year, week, weekday) = (date.iso_week().year(), date.iso_week().week(), date.weekday());
     println!("ISO week date: year={}, week={}, weekday={:?}", year, week, weekday);
 
     // Get individual date components
@@ -30,7 +30,7 @@ fn main() {
     println!("Month: {}, Day: {}", month, day);
 
     // Create a time
-    let time = NaiveTime::from_hms(14, 30, 0);
+    let time = NaiveTime::from_hms_opt(14, 30, 0).unwrap();
     println!("Time: {}", time);
 
     // Create a datetime
@@ -38,7 +38,7 @@ fn main() {
     println!("DateTime: {}", datetime);
 
     // Use UTC (renamed to Utc in 0.4)
-    let utc_now = UTC::now();
+    let utc_now = Utc::now();
     println!("UTC now: {}", utc_now);
 
     // Use Local (path changes in 0.4)
@@ -50,7 +50,7 @@ fn main() {
     println!("Formatted UTC: {}", formatted);
 
     // More date operations
-    let tomorrow = date.succ();
-    let yesterday = date.pred();
+    let tomorrow = date.succ_opt().unwrap();
+    let yesterday = date.pred_opt().unwrap();
     println!("Tomorrow: {}, Yesterday: {}", tomorrow, yesterday);
 }
